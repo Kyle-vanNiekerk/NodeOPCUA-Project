@@ -1,0 +1,19 @@
+{
+  "name": "tutorial",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/node": "^22.5.5",
+    "chalk": "^5.3.0",
+    "node-opcua": "^2.132.0",
+    "node-opcua-file-transfer": "^2.132.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}
