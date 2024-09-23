@@ -1,7 +1,9 @@
 (async ()=> {
     try {
         console.log("Hello World");
+        console.log("Thendo");
     } catch (err) {
         console.log("Error: ", err)
+
     }
 })();
