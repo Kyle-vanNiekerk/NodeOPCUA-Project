@@ -7,6 +7,5 @@
         console.log("Thendo");
     } catch (err) {
         console.log("Error: ", err)
-
     }
 })();
