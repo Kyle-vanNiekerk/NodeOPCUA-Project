@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "skipLibCheck": true,
+        "outDir": "build",
+        "target": "ESNext",
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "lib": ["es7"],
+        "strict": true,
+        "strictNullChecks": true,
+        "sourceMap": true,
+        "baseUrl": ".",
+        "paths": {
+            "*": ["node_modules/*"]
+        }
+    },
+    "lib": ["esnext"],
+    "include": ["*.ts"],
+}
