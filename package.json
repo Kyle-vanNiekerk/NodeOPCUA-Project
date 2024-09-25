@@ -9,11 +9,15 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@types/node": "^22.5.5",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^22.7.0",
     "chalk": "^5.3.0",
     "node-opcua": "^2.132.0",
     "node-opcua-file-transfer": "^2.132.0",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "source-map-support": "^0.5.21"
   }
 }
