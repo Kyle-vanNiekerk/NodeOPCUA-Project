@@ -19,5 +19,5 @@
         }
     },
     "lib": ["esnext"],
-    "include": ["*.ts"],
+    "include": ["*.ts", "archive/my_test_program.ts"],
 }
