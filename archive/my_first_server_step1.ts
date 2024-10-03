@@ -9,7 +9,14 @@ const chalk = require("chalk");
 
 try {
     // Server Code
-    const server = new OPCUAServer({ port: 26543 });
+    const server = new OPCUAServer({ 
+        port: 26543,
+        buildInfo: {
+            manufacturerName: "MyCompany",
+            productName: "myFirstOPCUAServer",
+            softwareVersion: "1.0.0"
+        },
+     });
 
     await server.start();
 
@@ -18,6 +25,7 @@ try {
     console.log("CTRL+C to stop");
 
     // Shutdown Management
+    // Press Ctrl + C to stop: process.once("SIGINT",()=>{/* */}).
     process.once("SIGINT", () => {
         // Prevent re-entrance"
         console.log(" Received server interruption from user ");
