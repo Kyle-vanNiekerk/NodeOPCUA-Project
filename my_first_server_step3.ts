@@ -43,6 +43,7 @@ function add_some_server_veriables(server: typeof OPCUAServer){
    (myObjectFound2.myVariable /*as UAVariable*/).setValueFromSource({});
 }
 
+// Main
 (async () => {
 
 try {
