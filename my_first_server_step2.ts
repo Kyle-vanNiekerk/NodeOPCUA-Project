@@ -56,6 +56,7 @@ try {
         propertyOf: "ns=1;s=my_object_id",
     });
 
+    // Access object, properties and components
     const myObjectFound = addressSpace.findNode("ns=1;s=my_object_id");// as UAObject; // as UAObject requires import; does not work
     if(!myObjectFound)
     {
@@ -63,6 +64,19 @@ try {
     }/*else{
         console.log("myObject found!");
     }*/
+   const myVariableFound = myObjectFound.getPropertyByName("myVariable2");
+   if(!myVariableFound)
+   {
+       throw new Error("Cannot find variable with browseName myVariable2");
+   }/*else{
+       console.log("myVariable2 found!");
+   }*/
+   myVariableFound.setValueFromSource({
+        dataType: DataType.Double,
+        value: 42,
+   });
+   console.log(myVariable2.toString);
+
 /*
     console.log(myObject.toString());
     console.log(myObject1.toString());
