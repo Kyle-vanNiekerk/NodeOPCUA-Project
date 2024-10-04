@@ -1,6 +1,5 @@
-import { DataType } from "node-opcua";
-
-const { OPCUAServer, ServerState, coerceLocalizedText } = require("node-opcua");
+//import { UAObject } from "node-opcua"; // Imports do not work
+const { OPCUAServer, ServerState, DataType, UAObject, coerceLocalizedText } = require("node-opcua");
 const chalk = require("chalk");
 
 
@@ -46,23 +45,31 @@ try {
         organizedBy: "ns=0;i=84", // myFolder.nodeId.toString();
     });
     // Adding a Variable
-    const myVariable = namespace.addVariable({
+    const myVariable1 = namespace.addVariable({
         browseName: "myVariable1",
         dataType: DataType.Double,
         propertyOf: myObject,
     });
-    const myVariable1 = namespace.addVariable({
+    const myVariable2 = namespace.addVariable({
         browseName: "myVariable2",
         dataType: DataType.Double,
-        propertyOf: "ns=1,s=my_object_id",
+        propertyOf: "ns=1;s=my_object_id",
     });
 
+    const myObjectFound = addressSpace.findNode("ns=1;s=my_object_id");// as UAObject; // as UAObject requires import; does not work
+    if(!myObjectFound)
+    {
+        throw new Error("Cannot find node ns=1;s=my_object");
+    }/*else{
+        console.log("myObject found!");
+    }*/
+/*
     console.log(myObject.toString());
     console.log(myObject1.toString());
     console.log(myObject2.toString());
     console.log(myObject3.toString());
     console.log(myFolder.toString());
-
+*/
     const endpointUrl = server.getEndpointUrl();
     console.log(" server is ready on ", endpointUrl);
     console.log("CTRL+C to stop");
