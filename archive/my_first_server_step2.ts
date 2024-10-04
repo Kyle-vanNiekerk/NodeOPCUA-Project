@@ -1,7 +1,5 @@
-//import { UAObject } from "node-opcua"; // Imports do not work
-const { OPCUAServer, ServerState, DataType, UAObject, coerceLocalizedText } = require("node-opcua");
+const { OPCUAServer, ServerState, DataType, UAObject, UAVariable, UAMethod, coerceLocalizedText } = require("node-opcua");
 const chalk = require("chalk");
-
 
 (async () => {
 
@@ -57,25 +55,30 @@ try {
     });
 
     // Access object, properties and components
-    const myObjectFound = addressSpace.findNode("ns=1;s=my_object_id");// as UAObject; // as UAObject requires import; does not work
+    const myObjectFound = addressSpace.findNode("ns=1;s=my_object_id");
     if(!myObjectFound)
     {
         throw new Error("Cannot find node ns=1;s=my_object");
     }/*else{
         console.log("myObject found!");
     }*/
-   const myVariableFound = myObjectFound.getPropertyByName("myVariable2");
-   if(!myVariableFound)
-   {
-       throw new Error("Cannot find variable with browseName myVariable2");
-   }/*else{
-       console.log("myVariable2 found!");
-   }*/
-   myVariableFound.setValueFromSource({
+
+    // Access and modify variable
+    const myVariableFound = myObjectFound.getPropertyByName("myVariable2");
+    if(!myVariableFound)
+    {
+        throw new Error("Cannot find variable with browseName myVariable2");
+    }/*else{
+        console.log("myVariable2 found!");
+    }*/
+    myVariableFound.setValueFromSource({
         dataType: DataType.Double,
         value: 42,
-   });
-   console.log(myVariable2.toString);
+    });
+   //console.log(myVariable2.toString());
+   
+   const myObjectFound2 = addressSpace.findNode("ns=1;s=my_object_id");
+   (myObjectFound2.myVariable2 /*as UAVariable*/).setValueFromSource({});
 
 /*
     console.log(myObject.toString());
