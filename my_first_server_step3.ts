@@ -40,7 +40,7 @@ function add_some_server_veriables(server: typeof OPCUAServer){
     });
    
    const myObjectFound2 = addressSpace.findNode("ns=1;s=my_object_id");
-   (myObjectFound2.myVariable /*as UAVariable*/).setValueFromSource({});
+   (myObjectFound2.myVariable).setValueFromSource({});
 }
 
 // Main
