@@ -12,9 +12,9 @@ function add_some_server_veriables(server: typeof OPCUAServer){
     });
     // Add Object
     const myObject = namespace.addObject({
-        browseName: "myVariable2",
-        dataType: DataType.Double,
-        propertyOf: "ns=1;s=my_object_id",
+        nodeId: "s=my_object_id", // Specify NodeId
+        browseName: "MyObject3",
+        organizedBy: "ns=0;i=84", // myFolder.nodeId.toString();
     });
     // Adding a Variable
     const myVariable1 = namespace.addVariable({
@@ -26,7 +26,7 @@ function add_some_server_veriables(server: typeof OPCUAServer){
     const myObjectFound = addressSpace.findNode("ns=1;s=my_object_id");
     if(!myObjectFound)
     {
-        throw new Error("Cannot find node ns=1;s=my_object");
+        throw new Error("Cannot find node ns=1;s=my_object_id");
     }
     // Access and modify variable
     const myVariableFound = myObjectFound.getPropertyByName("myVariable");
@@ -40,9 +40,8 @@ function add_some_server_veriables(server: typeof OPCUAServer){
     });
    
    const myObjectFound2 = addressSpace.findNode("ns=1;s=my_object_id");
-   (myObjectFound2.myVariable2 /*as UAVariable*/).setValueFromSource({});
+   (myObjectFound2.myVariable /*as UAVariable*/).setValueFromSource({});
 }
-
 
 (async () => {
 
@@ -56,10 +55,12 @@ try {
             softwareVersion: "1.0.0"
         },
      });
-
-    await server.start();
+    
+    await server.initialize();
 
     add_some_server_veriables(server);
+
+    await server.start();
 
     const endpointUrl = server.getEndpointUrl();
     console.log(" server is ready on ", endpointUrl);
