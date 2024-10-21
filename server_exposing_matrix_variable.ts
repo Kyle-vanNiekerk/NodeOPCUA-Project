@@ -1,7 +1,7 @@
 // Undefined address space?
 const {OPCUAServer, DataType, VariantArrayType, UAVariable, UAMethod, UAObject} = require("node-opcua");
 
-function initialsise(server: typeof OPCUAServer){
+function add_variables(server: typeof OPCUAServer){
 
     const addressSpace = server.engine.addressSpace!;
     const namespace = addressSpace.getOwnNamespace();
@@ -53,7 +53,8 @@ async function main(){
             },
         });
 
-        initialsise(server);
+        await server.initialize();
+        add_variables(server);
 
         await server.start();
         const endpointUrl = server.getEndpointUrl()!;
