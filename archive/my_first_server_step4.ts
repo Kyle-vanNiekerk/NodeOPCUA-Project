@@ -2,6 +2,7 @@ const {
     OPCUAServer, ServerState, DataType, DataValue, UAObject, UAVariable, UAMethod, Variant, StatusCodes, timestamp, coerceLocalizedText,
     StatusCode, BindVariableOptionsVariation2, CallbackT, StatusCodeCallback, ErrorCallback, SessionContext
 } = require("node-opcua");
+const callbackify = require("util");
 const chalk = require("chalk");
 
 function add_some_server_veriables(server: typeof OPCUAServer){
@@ -170,7 +171,7 @@ function add_some_server_veriables(server: typeof OPCUAServer){
         })();
         await (async function technique6() {
             //technique 6 - using an asynchronous timestamped getter and setter
-            /*
+            /*  DEPENDS ON FUNCTIONS THAT HAVE NEVER BEEN DEFINED AN DO NOT FIT IN THE CURRENT CODEBASE (EXTERNAL ASYNC FUNCTION)
             const dataValue6 = new DataValue({
                 value: new Variant({
                 dataType: DataType. Double,
