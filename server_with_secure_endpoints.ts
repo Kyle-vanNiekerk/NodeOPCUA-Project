@@ -1,9 +1,10 @@
-async function main() {
+async function main(){
     const {OPCUAServer, OPCUACertificateManager, SecurityPolicy, MessageSecurityMode, extractFullyQualifiedDomainName, makeApplicationUrn} = await import("node-opcua");
     const path = await import("path");
     const fs = await import("fs");
 
-(async function main(){
+    console.log("running");
+
         // Create PKI Root Folder
         const envPaths = await import("env-paths");
         const paths = envPaths.default("MyOPCUAServer");
@@ -46,7 +47,7 @@ async function main() {
 
         try{
             const server = new OPCUAServer({
-                port: 26700,
+                port: 22701,
                 serverCertificateManager,
                 certificateFile,
     
@@ -60,7 +61,9 @@ async function main() {
                 }
             });
     
+            await server.initialize();
             await server.start();
+
             console.log(".. server started ...");
             console.log("Server public key ", server.certificateFile);
             console.log("Server private key ", server.privateKeyFile);
@@ -72,10 +75,9 @@ async function main() {
         } catch (err) {
             console.log(err);
         }
-    }
-    
-)};
+    };
 
+main();
 
 // Function Definitions-------------------------------------------------------------------------------------------|
 
