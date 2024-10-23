@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf build",
-    "start": "tsc && node build/server_with_event.js",
+    "start": "tsc && node build/server_with_user_management.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "update:node-opcua": "npx npm-check-updates -u -f \"node-opcua*\""
   },
@@ -16,12 +16,14 @@
     "@types/node": "^22.7.0",
     "chalk": "^4.1.2",
     "env-paths": "^3.0.0",
+    "esm": "^3.2.25",
     "node-opcua": "^2.132.0",
     "node-opcua-file-transfer": "^2.132.0",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
   },
   "devDependencies": {
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "ts-node": "^10.9.2"
   }
 }
