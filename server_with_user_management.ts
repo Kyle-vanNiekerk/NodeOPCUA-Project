@@ -1,76 +1,97 @@
-(async function main(){
-    
-    const {OPCUAServer} = await import("node-opcua");
+(async function main() {
+    const { OPCUAServer, makeAccessRestrictionsFlag, DataType, AttributeIds, WellKnownRoles, PermissionType, allPermissions, makeRoles, NodeId } = await import("node-opcua");
 
-    try{
-        const server = new OPCUAServer({ 
-            port: 26543,
+    try {
+        const userManager = {
+            isValidUser: (userName: string, password: string): boolean => {
+                if (userName === "user1" && password === "password1") {
+                    return true;
+                }
+                if (userName === "user2" && password === "password2") {
+                    return true;
+                }
+                return false;
+            },
+
+            // see OPCUA 1.04 part 3 4.8.2 Well know role
+            // see OPCUA 1.04 part 3 4.8.2 Well know role
+            // Anonymous The Role has very limited access for use when
+            // a Session has anonymous credentials.
+            // AuthenticatedUser The Role has limited access for use when a Session
+            // has valid non-anonymous credentials
+            // but has not been explicitly granted access to a Role.
+            // Observer The Role is allowed to browse, read live data, read
+            // historical data/events or subscribe to data/events.
+            // Operator The Role is allowed to browse, read live data, read
+            // historical data/events or subscribe to data/events.
+            // In addition, the Session is allowed to write some live
+            // data and call some Methods.
+            // Engineer The Role is allowed to browse, read/write configuration
+            // data, read historical data/events call Methods or
+            // subscribe to data/events.
+            // Supervisor The Role is allowed to browse, read live data, read
+            // historical data/events, call Methods or subscribe
+            // to data/events.
+            // ConfigureAdmin The Role is allowed to change the non-security related
+            // configuration settings.
+            // SecurityAdmin The Role is allowed to change security related settings.
+
+            getUserRoles: (username: string) => {
+                if (username === "user1") {
+                    return makeRoles("AuthenticatedUser;Observer;Operator");
+                }
+                if (username === "user2") {
+                    return makeRoles("AuthenticatedUser;Supervisor;SecurityAdmin");
+                }
+                return makeRoles("Anonymous");
+            }
+        };
+
+        const server = new OPCUAServer({
+            port: 20500,
+            // ...
+            userManager,
+            // ...
+            allowAnonymous: false
+        });
+        await server.initialize();
+
+        const addressSpace = server.engine.addressSpace!;
+        const namespace = addressSpace.getOwnNamespace();
+
+        const o = namespace.addObject({
+            browseName: "MyObject",
+            organizedBy: addressSpace.rootFolder.objects
         });
 
+        const v = namespace.addVariable({
+            nodeId: "s=VariableWithRestriction",
+            browseName: "VariableWithPermissions",
+            description: "Only Admin Can Write, Read only to authenticated user, require Encryption",
+            dataType: "Double",
+            value: { dataType: DataType.Double, value: 0},
+
+            accessRestrictions: makeAccessRestrictionsFlag("None"),
+            rolePermissions: [
+                {
+                    roleId: WellKnownRoles.ConfigureAdmin,
+                    permissions: allPermissions,
+                },
+                {
+                    roleId: WellKnownRoles.Anonymous,
+                    permissions: PermissionType.None,
+                },
+                {
+                    roleId: WellKnownRoles.AuthenticatedUser,
+                    permissions: PermissionType.ReadRolePermissions,
+                },
+            ]
+        })
+
         await server.start();
-        populateAddressSpace(server);
+        console.log("Server started");
 
-        console.log(" server is ready on ", server.getEndpointUrl());
-        console.log("CTRL+C to stop");
-
-    }catch(err){
+    } catch (err) {
         console.log("Error", err);
-        process.exit(1);
     }
 })();
-
-const {OPCUAServer, IEventData} = require("node-opcua");
-function populateAddressSpace(server: typeof OPCUAServer){
-    
-    const addressSpace = server.engine.addressSpace!;
-    const namespace = addressSpace.getOwnNamespace();
-
-    // Create Area1:
-    const area1 = namespace.addObject({
-        browseName: "Area1",
-        organizedBy: addressSpace.rootFolder.objects,
-        notifierOf: addressSpace.rootFolder.objects.server,
-    });
-
-    // Create Tank1 Inside Area1
-    const tank1 = namespace.addObject({
-        browseName: "Tank1",
-        componentOf: area1,
-        notifierOf: area1,
-    });
-
-    // Create PumpStartEventType
-    const pumpStartEventType = namespace.addEventType({
-        browseName: "PumpStartEventType",
-    });
-
-    // Create Pump
-    const pump = namespace.addObject({
-        browseName: "Pump",
-        componentOf: tank1,
-        eventSourceOf: tank1,
-        eventNotifier: 1,
-    });
-
-    // Event Handler to See Bubbling-up in Action
-    const serverObj = addressSpace.findNode("Server")!;
-    serverObj.on("event", (e: typeof IEventData) => {
-        console.log("server is raising an event");
-    });
-    pump.on("event", (e: typeof IEventData) => {
-        console.log("pump is raising an event");
-    });
-    tank1.on("event", (e: typeof IEventData) => {
-        console.log("tank1 is raising an event");
-    });
-        area1.on("event", (e: typeof IEventData) => {
-            console.log("area1 is raising an event");
-    });
-
-    // Simulate a PumpStartEvent Being Raised on a Regular Basis
-    setInterval(() => {
-        const eventData = {};
-        pump.raiseEvent(pumpStartEventType, eventData);
-    }, 3000);
-    // now with the event being raised in UAExpert
-}
