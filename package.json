@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf build",
-    "start": "tsc && node build/server_with_user_management.js",
+    "start": "tsc && node build/b.server_with_user_management.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "update:node-opcua": "npx npm-check-updates -u -f \"node-opcua*\""
   },
